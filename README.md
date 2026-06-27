@@ -166,6 +166,28 @@ npm run preview
 
 ---
 
+## Docker
+
+A production-ready `Dockerfile` is located at `Health_Agent_UI/Dockerfile`. It uses a multi-stage build:
+
+1. **Build stage** — installs dependencies and runs `npm run build` using `node:20-alpine`
+2. **Serve stage** — serves the static output via `nginx:alpine`
+
+### Build & Run
+
+```bash
+docker build -t health-agent-ui \
+  --build-arg VITE_CLERK_PUBLISHABLE_KEY=pk_test_xxxxxxxx \
+  --build-arg VITE_API_URL=http://localhost:5000/api \
+  -f Health_Agent_UI/Dockerfile .
+
+docker run -d -p 8080:80 health-agent-ui
+```
+
+The app is available at `http://localhost:8080`. An `nginx.conf` is included at `Health_Agent_UI/nginx.conf` for custom reverse-proxy configuration (e.g. forwarding `/api/` to the backend).
+
+---
+
 ## Scripts
 
 | Command | Description |
