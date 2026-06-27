@@ -83,7 +83,7 @@ export default function ChatPage() {
       let message = err.message || 'Unable to process your request. Please try again.'
       if (err instanceof ApiError) {
         if (err.status === 0) {
-          message = 'Cannot connect to the backend server. Make sure it is running on port 5000.'
+          message = 'Cannot connect to the backend server. Please check your connection and try again.'
         } else {
           message = `${err.status === 401 ? 'Auth' : 'Server'} error (${err.status}): ${err.message}`
         }
