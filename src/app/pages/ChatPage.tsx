@@ -1,9 +1,8 @@
 import { useState, useRef, useEffect, type FormEvent } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { useAuth } from '@clerk/react'
+import { useAuth, useUser } from '@clerk/react'
 import { useMutation } from '@tanstack/react-query'
 import { api, ApiError } from '../services/api'
-import { useAuthStore } from '../store/authStore'
 import { useChatStore, type ChatMessage, type SymptomAnalysisResponse } from '../store/chatStore'
 
 function generateId() {
@@ -31,6 +30,7 @@ function getConfidenceColor(level?: string) {
 
 export default function ChatPage() {
   const { isSignedIn, isLoaded } = useAuth()
+  const { user } = useUser()
   const navigate = useNavigate()
   const [input, setInput] = useState('')
   const messagesEndRef = useRef<HTMLDivElement>(null)
@@ -39,8 +39,6 @@ export default function ChatPage() {
     messages, conversationId, isSending,
     addMessage, updateLastMessage, setConversationId, setSending,
   } = useChatStore()
-  const backendAuthStatus = useAuthStore((s) => s.backendAuthStatus)
-  const backendAuthError = useAuthStore((s) => s.backendAuthError)
 
   useEffect(() => {
     if (isLoaded && !isSignedIn) {
@@ -56,7 +54,7 @@ export default function ChatPage() {
     mutationFn: async (description: string) => {
       return api.post<SymptomAnalysisResponse>(
         '/health/chat',
-        { description, conversationId },
+        { description, conversationId, userId: user?.id },
       )
     },
     onMutate: () => {
@@ -154,20 +152,6 @@ export default function ChatPage() {
           </button>
         </div>
 
-        {backendAuthStatus === 'syncing' && (
-          <div className="sync-banner">
-            <div className="sync-spinner" />
-            <span>Connecting to backend server...</span>
-          </div>
-        )}
-        {backendAuthStatus === 'error' && (
-          <div className="sync-banner sync-error">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-              <circle cx="12" cy="12" r="10" /><path d="M12 8v4M12 16h.01" />
-            </svg>
-            <span>{backendAuthError || 'Backend connection failed'}</span>
-          </div>
-        )}
         <div className="chat-messages">
           {messages.length === 0 && (
             <div className="chat-empty">

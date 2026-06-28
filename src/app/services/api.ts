@@ -1,5 +1,3 @@
-import { useAuthStore } from '../store/authStore'
-
 const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5115'
 
 interface ApiResponse<T> {
@@ -23,17 +21,10 @@ class ApiError extends Error {
 async function request<T>(
   endpoint: string,
   options: RequestInit = {},
-  token?: string | null,
 ): Promise<T> {
-  const effectiveToken = token ?? useAuthStore.getState().backendToken
-
   const headers: Record<string, string> = {
     'Content-Type': 'application/json',
     ...(options.headers as Record<string, string>),
-  }
-
-  if (effectiveToken) {
-    headers['Authorization'] = `Bearer ${effectiveToken}`
   }
 
   let response: Response
@@ -77,17 +68,17 @@ async function request<T>(
 }
 
 export const api = {
-  get: <T>(endpoint: string, token?: string | null) =>
-    request<T>(endpoint, { method: 'GET' }, token),
+  get: <T>(endpoint: string) =>
+    request<T>(endpoint, { method: 'GET' }),
 
-  post: <T>(endpoint: string, body: unknown, token?: string | null) =>
-    request<T>(endpoint, { method: 'POST', body: JSON.stringify(body) }, token),
+  post: <T>(endpoint: string, body: unknown) =>
+    request<T>(endpoint, { method: 'POST', body: JSON.stringify(body) }),
 
-  put: <T>(endpoint: string, body: unknown, token?: string | null) =>
-    request<T>(endpoint, { method: 'PUT', body: JSON.stringify(body) }, token),
+  put: <T>(endpoint: string, body: unknown) =>
+    request<T>(endpoint, { method: 'PUT', body: JSON.stringify(body) }),
 
-  delete: <T>(endpoint: string, token?: string | null) =>
-    request<T>(endpoint, { method: 'DELETE' }, token),
+  delete: <T>(endpoint: string) =>
+    request<T>(endpoint, { method: 'DELETE' }),
 }
 
 export { ApiError }

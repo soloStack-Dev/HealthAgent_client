@@ -6,7 +6,6 @@ import About from './app/pages/About'
 import SignInPage from './app/pages/SignInPage'
 import SignUpPage from './app/pages/SignUpPage'
 import ChatPage from './app/pages/ChatPage'
-import { useBackendAuth } from './app/hooks/useBackendAuth'
 
 function ProtectedRoute({ children }: { children: React.ReactNode }) {
   const { isSignedIn, isLoaded } = useAuth()
@@ -15,15 +14,9 @@ function ProtectedRoute({ children }: { children: React.ReactNode }) {
   return <>{children}</>
 }
 
-function AuthGate() {
-  useBackendAuth()
-  return null
-}
-
 export default function App() {
   return (
     <>
-      <AuthGate />
       <Routes>
         <Route element={<Layout />}>
           <Route path="/" element={<Home />} />
