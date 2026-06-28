@@ -1,6 +1,6 @@
 import { useAuthStore } from '../store/authStore'
 
-const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5115/api'
+const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5115'
 
 interface ApiResponse<T> {
   success: boolean
@@ -38,7 +38,7 @@ async function request<T>(
 
   let response: Response
   try {
-    response = await fetch(`${API_BASE_URL}${endpoint}`, {
+    response = await fetch(`${API_BASE_URL}/api${endpoint}`, {
       ...options,
       headers,
     })
