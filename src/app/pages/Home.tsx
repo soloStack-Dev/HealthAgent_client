@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom'
 import { useAuth, SignInButton } from '@clerk/react'
+import heroImg from '../../assets/hero.png'
 
 export default function Home() {
   const { isSignedIn, isLoaded } = useAuth()
@@ -50,12 +51,8 @@ export default function Home() {
         <div className="hero-visual animate-slide-in">
           <div className="hero-image-wrapper">
             <div className="hero-image-glow" />
-            <div className="hero-image-placeholder">
-              <div className="placeholder-icon">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
-                  <path d="M12 21.5C17.5 17 22 13 22 8.5C22 4.5 18.5 3 12 8.5C5.5 3 2 4.5 2 8.5C2 13 6.5 17 12 21.5Z" />
-                </svg>
-              </div>
+            <div className="hero-image-frame">
+              <img src={heroImg} alt="Health recommendation illustration" className="hero-image" />
             </div>
             <div className="floating-card card-1">
               <div className="card-dot" />
